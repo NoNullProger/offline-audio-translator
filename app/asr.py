@@ -8,7 +8,7 @@ import av
 from faster_whisper import WhisperModel
 
 MODEL_DIRS = {
-    "turbo": "whisper-large-v3-turbo",
+    "large-v3": "whisper-large-v3",
     "medium": "whisper-medium",
     "small": "whisper-small",
 }

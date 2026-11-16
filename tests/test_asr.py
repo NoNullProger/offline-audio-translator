@@ -17,7 +17,7 @@ def make_wav(path: Path, seconds: float = 0.5):
 
 
 def test_model_dirs():
-    assert MODEL_DIRS["turbo"] == "whisper-large-v3-turbo"
+    assert MODEL_DIRS["large-v3"] == "whisper-large-v3"
 
 
 def test_segment_fields():

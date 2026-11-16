@@ -10,7 +10,7 @@ translator-bundle-<дата>/
 ├── selftest.sh       # самопроверка на целевой машине: bash selftest.sh
 ├── python/           # портативный CPython 3.11 (linux x86_64)
 ├── site-packages/    # зависимости (faster-whisper, ctranslate2, fastapi, …)
-├── models/           # whisper-large-v3-turbo, whisper-medium, whisper-small, nllb-600m-ct2
+├── models/           # whisper-large-v3, whisper-medium, whisper-small, nllb-600m-ct2
 ├── app/  web/        # код сервиса и интерфейс
 ├── output/ work/ logs/ testdata/
 └── requirements.txt
@@ -30,7 +30,7 @@ uv pip install -r requirements-convert.txt -p .venv
 bash scripts/build-offline-bundle.sh
 ```
 
-Результат: `translator-bundle-<дата>.tar.gz` (~6–7 ГБ: turbo ~0.9 ГБ,
+Результат: `translator-bundle-<дата>.tar.gz` (~8 ГБ: large-v3 ~3 ГБ,
 medium ~3 ГБ, small ~0.5 ГБ, nllb int8 ~0.7 ГБ, python+site-packages ~0.5 ГБ).
 
 ## 2. Перенос на флешку
@@ -81,7 +81,7 @@ translation.txt, result.docx.
   оттуда; установка в систему всё равно не требуется.
 - **PARSEC (Astra SE)**: если съёмные носители запрещены политиками мандатного
   контроля — вопрос к администраторам; из ПО это не решается.
-- **Память**: модель turbo + переводчик занимают ~2.5–3 ГБ; при 8 ГБ RAM
+- **Память**: модель large-v3 (int8) + переводчик занимают ~3–3.5 ГБ; при 8 ГБ RAM
   одновременно обрабатывается одна задача (так и задумано).
 - **Качество**: uz/az/tg — низкоресурсные языки; оценка WER на FLEURS —
   в `docs/benchmark.md`; на записях плохого качества ожидайте заметные ошибки.

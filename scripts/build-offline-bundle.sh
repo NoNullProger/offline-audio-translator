@@ -24,13 +24,13 @@ pip3 install \
   --target "$BUNDLE/site-packages" -r "$REPO/requirements.txt"
 
 echo "==> Модели"
-if [ -d "$REPO/models-dev/whisper-large-v3-turbo" ] && [ -d "$REPO/models-dev/nllb-600m-ct2" ]; then
-  cp -r "$REPO/models-dev/whisper-large-v3-turbo" "$REPO/models-dev/whisper-medium" \
+if [ -d "$REPO/models-dev/whisper-large-v3" ] && [ -d "$REPO/models-dev/nllb-600m-ct2" ]; then
+  cp -r "$REPO/models-dev/whisper-large-v3" "$REPO/models-dev/whisper-medium" \
         "$REPO/models-dev/whisper-small" "$REPO/models-dev/nllb-600m-ct2" "$BUNDLE/models/"
 else
   echo "Моделей нет в models-dev/ — запускаю prepare-models.py"
   "$REPO/.venv/bin/python" "$REPO/scripts/prepare-models.py"
-  cp -r "$REPO/models-dev/whisper-large-v3-turbo" "$REPO/models-dev/whisper-medium" \
+  cp -r "$REPO/models-dev/whisper-large-v3" "$REPO/models-dev/whisper-medium" \
         "$REPO/models-dev/whisper-small" "$REPO/models-dev/nllb-600m-ct2" "$BUNDLE/models/"
 fi
 

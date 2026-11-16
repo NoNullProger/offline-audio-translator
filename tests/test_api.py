@@ -37,7 +37,7 @@ def test_health(tmp_path):
 
 def test_full_job_flow(tmp_path):
     client, mgr = make_client(tmp_path)
-    r = client.post("/api/jobs", data={"language": "uz", "model_size": "turbo"},
+    r = client.post("/api/jobs", data={"language": "uz", "model_size": "large-v3"},
                     files={"file": ("запись.wav", b"fake wav", "audio/wav")})
     assert r.status_code == 200
     job_id = r.json()["id"]

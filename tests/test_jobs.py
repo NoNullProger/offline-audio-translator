@@ -33,7 +33,7 @@ def make_mgr(tmp_path, transcribe=fake_transcribe, translate=fake_translate):
 def submit(mgr, tmp_path):
     src = tmp_path / "in.wav"
     src.write_bytes(b"fake")
-    return mgr.submit(src, "запись.wav", "uz", "turbo")
+    return mgr.submit(src, "запись.wav", "uz", "large-v3")
 
 
 def test_pipeline_happy_path(tmp_path):

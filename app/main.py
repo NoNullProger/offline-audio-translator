@@ -47,8 +47,8 @@ def create_app(manager: JobManager | None = None) -> FastAPI:
                    model_size: str = Form("turbo")):
         if language not in ("uz", "az", "tg", "auto"):
             raise HTTPException(400, "язык должен быть uz, az, tg или auto")
-        if model_size not in ("turbo", "medium", "small"):
-            raise HTTPException(400, "model_size должен быть turbo, medium или small")
+        if model_size not in ("large-v3", "medium", "small"):
+            raise HTTPException(400, "model_size должен быть large-v3, medium или small")
         job_id = uuid.uuid4().hex[:12]
         tmp = work_dir() / f"upload-{job_id}"
         tmp.parent.mkdir(parents=True, exist_ok=True)
