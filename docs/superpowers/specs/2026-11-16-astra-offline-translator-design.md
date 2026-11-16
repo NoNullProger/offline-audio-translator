@@ -161,3 +161,26 @@ translator/
   medium, small; NLLB-600M int8 (~0.6 ГБ). Пик памяти ~3–3.5 ГБ — в пределах 8 ГБ.
 - Репозиторий Systran/faster-whisper-large-v3-turbo закрыт (HTTP 401) —
   turbo исключён из комплекта.
+
+## 11. Гибридная архитектура ASR (2026-11-16, по бенчмарку)
+
+Бенчмарк на FLEURS (15 клипов/язык, docs/benchmark.md) показал:
+
+| язык | Whisper large-v3 | Vosk ONNX (sherpa-onnx) |
+|---|---|---|
+| uz | 92.04% | **22.48%** |
+| az | **18.16%** | модели нет |
+| tg | 76.15% | **8.07%** |
+
+Whisper на uz/tg транскрибирует фонетически похоже, но чужой орфографией
+(вкрапления казахского/турецкого/персидского), что ломает и перевод.
+
+Итоговое решение: **маршрутизация по языку**:
+- uz → alphacep/vosk-model-small-streaming-uz (ONNX, streaming zipformer2, ~90 МБ);
+- tg → alphacep/vosk-model-tajik (ONNX, non-streaming zipformer2, ~180 МБ);
+- az → whisper large-v3 (int8);
+- auto → определить язык фрагментом Whisper, затем маршрутизация.
+
+Рантайм ONNX — sherpa-onnx (CPU, manylinux-колёса есть). Сегментация uz/tg:
+silero VAD (уже входит в faster-whisper) нарезает речь на куски ≤30 с по
+паузам; каждому куску соответствует сегмент с таймкодами.
