@@ -3,5 +3,5 @@ __pycache__/
 *.pyc
 models-dev/
 data/
-translator-bundle*/
+translator-bundle*
 .pytest_cache/

@@ -40,7 +40,7 @@ else
 fi
 
 echo "==> Тестовый клип для selftest"
-TESTCLIP=$(find "$REPO/data/fleurs" -name "001.*" ! -name "*.ref.txt" | head -n1 || true)
+TESTCLIP=$(find "$REPO/data/fleurs" -name "001.*" ! -name "*.ref.txt" -print -quit || true)
 if [ -n "$TESTCLIP" ]; then
   cp "$TESTCLIP" "$BUNDLE/testdata/test.${TESTCLIP##*.}"
 else
