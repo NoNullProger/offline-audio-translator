@@ -69,3 +69,9 @@ def test_bad_language_rejected(tmp_path):
     r = client.post("/api/jobs", data={"language": "de", "model_size": "small"},
                     files={"file": ("a.wav", b"x", "audio/wav")})
     assert r.status_code == 400
+
+
+def test_index_served(tmp_path):
+    client, _ = make_client(tmp_path)
+    r = client.get("/")
+    assert r.status_code == 200 and "Расшифровка аудио и перевод" in r.text

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Расшифровка аудио</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<main>
+  <h1>Расшифровка аудио и перевод на русский</h1>
+  <section class="card">
+    <form id="upload-form">
+      <label>Аудиофайл (mp3, m4a, wav, ogg, flac, mp4 — до 2 ГБ)
+        <input type="file" id="file" accept="audio/*,video/mp4" required>
+      </label>
+      <label>Язык записи
+        <select id="language">
+          <option value="uz">Узбекский</option>
+          <option value="az">Азербайджанский</option>
+          <option value="tg">Таджикский</option>
+          <option value="auto">Определить автоматически</option>
+        </select>
+      </label>
+      <label>Модель расшифровки
+        <select id="model_size">
+          <option value="turbo">Крупная (точнее, медленнее)</option>
+          <option value="medium">Средняя</option>
+          <option value="small">Небольшая (быстрее, грубее)</option>
+        </select>
+      </label>
+      <button type="submit">Обработать</button>
+      <span id="upload-status"></span>
+    </form>
+  </section>
+  <section class="card">
+    <h2>Задачи</h2>
+    <table id="jobs">
+      <thead><tr><th>Файл</th><th>Язык</th><th>Модель</th><th>Статус</th><th>Результат</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+  <section class="card" id="result" hidden>
+    <h2>Результат: <span id="result-name"></span></h2>
+    <div class="cols">
+      <div><h3>Расшифровка</h3><pre id="transcript"></pre></div>
+      <div><h3>Перевод</h3><pre id="translation"></pre></div>
+    </div>
+    <p><a id="dl-transcript" href="#" download>Скачать расшифровку (.txt)</a> ·
+       <a id="dl-translation" href="#" download>Скачать перевод (.txt)</a> ·
+       <a id="dl-docx" href="#" download>Скачать документ (.docx)</a></p>
+  </section>
+</main>
+<script src="/static/app.js"></script>
+</body>
+</html>
