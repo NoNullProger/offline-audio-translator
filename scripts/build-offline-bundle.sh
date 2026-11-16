@@ -18,10 +18,13 @@ mkdir -p "$BUNDLE/python"
 curl -L "$PYURL" | tar xz -C "$BUNDLE/python" --strip-components=1
 
 echo "==> Linux-колёса в site-packages (manylinux)"
-pip3 install \
-  --platform manylinux2014_x86_64 --platform manylinux_2_27_x86_64 --platform manylinux_2_28_x86_64 \
-  --python-version 3.11 --only-binary=:all: \
-  --target "$BUNDLE/site-packages" -r "$REPO/requirements.txt"
+PIP_FLAGS=(--platform manylinux2014_x86_64 --platform manylinux_2_27_x86_64 --platform manylinux_2_28_x86_64
+           --python-version 3.11 --only-binary=:all: --target "$BUNDLE/site-packages")
+if ! pip3 install "${PIP_FLAGS[@]}" -r "$REPO/requirements.txt"; then
+  echo "Официальный pypi недоступен — пробую зеркало tuna"
+  pip3 install "${PIP_FLAGS[@]}" --index-url https://pypi.tuna.tsinghua.edu.cn/simple \
+    -r "$REPO/requirements.txt"
+fi
 
 echo "==> Модели"
 if [ -d "$REPO/models-dev/whisper-large-v3" ] && [ -d "$REPO/models-dev/nllb-600m-ct2" ]; then
