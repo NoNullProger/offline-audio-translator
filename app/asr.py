@@ -1,10 +1,11 @@
-"""Расшифровка речи: faster-whisper на CPU, int8, VAD."""
+"""Расшифровка речи: гибрид — Whisper (az) и Vosk ONNX (uz/tg) через sherpa-onnx."""
 
 import os
 from dataclasses import dataclass
 from pathlib import Path
 
 import av
+import numpy as np
 from faster_whisper import WhisperModel
 
 MODEL_DIRS = {
@@ -70,3 +71,43 @@ class Transcriber:
                 on_progress(min(1.0, s.end / duration))
         detected = getattr(info, "language", None) if lang is None else lang
         return segments, detected
+
+    def detect_language(self, audio_path, model_size=None):
+        """Определяет язык по первым ~30 секундам (для маршрутизации auto)."""
+        model = self._model(model_size or "large-v3")
+        resampler = av.AudioResampler(format="s16", layout="mono", rate=16000)
+        samples: list[np.ndarray] = []
+        total = 0
+        with av.open(str(audio_path)) as container:
+            for frame in container.decode(audio=0):
+                for rf in resampler.resample(frame):
+                    arr = rf.to_ndarray().reshape(-1)
+                    samples.append(arr)
+                    total += len(arr)
+                if total >= 30 * 16000:
+                    break
+        if not samples:
+            raise ValueError("в файле нет аудиоданных")
+        pcm = np.concatenate(samples)[:30 * 16000].astype("float32") / 32768.0
+        _, info = model.transcribe(pcm, language=None, vad_filter=False)
+        return getattr(info, "language", None)
+
+
+class HybridTranscriber:
+    """Маршрутизация по языку: uz/tg → Vosk ONNX, az → Whisper (docs/benchmark.md)."""
+
+    def __init__(self, models_root: Path, whisper=None, vosk=None):
+        self._whisper = whisper or Transcriber(models_root)
+        if vosk is None:
+            from .vosk_asr import VoskTranscriber  # лениво, чтобы не зациклить импорт
+            vosk = VoskTranscriber(Path(models_root) / "vosk-onnx")
+        self._vosk = vosk
+
+    def transcribe(self, audio_path, language, model_size, on_progress=None):
+        if language in ("uz", "tg"):
+            return self._vosk.transcribe(audio_path, language, on_progress)
+        if language in (None, "auto"):
+            detected = self._whisper.detect_language(audio_path, model_size)
+            if detected in ("uz", "tg"):
+                return self._vosk.transcribe(audio_path, detected, on_progress)
+        return self._whisper.transcribe(audio_path, language, model_size, on_progress)

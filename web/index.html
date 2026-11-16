@@ -14,15 +14,16 @@
       <label>Аудиофайл (mp3, m4a, wav, ogg, flac, mp4 — до 2 ГБ)
         <input type="file" id="file" accept="audio/*,video/mp4" required>
       </label>
-      <label>Язык записи
+      <label>Язык записи (автоопределение ненадёжно различает узбекский
+        и азербайджанский — выбирайте явно)
         <select id="language">
           <option value="uz">Узбекский</option>
           <option value="az">Азербайджанский</option>
           <option value="tg">Таджикский</option>
-          <option value="auto">Определить автоматически</option>
         </select>
       </label>
-      <label>Модель расшифровки
+      <label>Модель Whisper (для азербайджанского и авто-определения;
+        узбекский и таджикский используют отдельную специализированную модель)
         <select id="model_size">
           <option value="large-v3">Крупная (точнее, медленнее)</option>
           <option value="medium">Средняя</option>

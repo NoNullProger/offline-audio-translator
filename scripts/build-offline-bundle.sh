@@ -26,12 +26,14 @@ pip3 install \
 echo "==> Модели"
 if [ -d "$REPO/models-dev/whisper-large-v3" ] && [ -d "$REPO/models-dev/nllb-600m-ct2" ]; then
   cp -r "$REPO/models-dev/whisper-large-v3" "$REPO/models-dev/whisper-medium" \
-        "$REPO/models-dev/whisper-small" "$REPO/models-dev/nllb-600m-ct2" "$BUNDLE/models/"
+        "$REPO/models-dev/whisper-small" "$REPO/models-dev/nllb-600m-ct2" \
+        "$REPO/models-dev/vosk-onnx" "$BUNDLE/models/"
 else
   echo "Моделей нет в models-dev/ — запускаю prepare-models.py"
   "$REPO/.venv/bin/python" "$REPO/scripts/prepare-models.py"
   cp -r "$REPO/models-dev/whisper-large-v3" "$REPO/models-dev/whisper-medium" \
-        "$REPO/models-dev/whisper-small" "$REPO/models-dev/nllb-600m-ct2" "$BUNDLE/models/"
+        "$REPO/models-dev/whisper-small" "$REPO/models-dev/nllb-600m-ct2" \
+        "$REPO/models-dev/vosk-onnx" "$BUNDLE/models/"
 fi
 
 echo "==> Тестовый клип для selftest"

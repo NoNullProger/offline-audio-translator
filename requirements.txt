@@ -1,5 +1,6 @@
 faster-whisper>=1.1.0,<2
 ctranslate2>=4.4.0,<5
+sherpa-onnx>=2.0,<3
 fastapi>=0.115,<1
 uvicorn>=0.30,<1
 python-multipart>=0.0.9,<0.1

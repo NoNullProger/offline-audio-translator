@@ -21,12 +21,17 @@ WHISPER_REPOS = {
     "whisper-medium": "Systran/faster-whisper-medium",
     "whisper-small": "Systran/faster-whisper-small",
 }
+# ONNX-модели Vosk (sherpa-onnx) для узбекского и таджикского
+VOSK_ONNX_REPOS = {
+    "vosk-onnx/uz": "alphacep/vosk-model-small-streaming-uz",
+    "vosk-onnx/tg": "alphacep/vosk-model-tajik",
+}
 NLLB_HF = "facebook/nllb-200-distilled-600M"
 NLLB_OUT = MODELS / "nllb-600m-ct2"
 
 
 def fetch_whisper() -> None:
-    for name, repo in WHISPER_REPOS.items():
+    for name, repo in {**WHISPER_REPOS, **VOSK_ONNX_REPOS}.items():
         dest = MODELS / name
         if dest.exists():
             print(f"[skip] {name}")

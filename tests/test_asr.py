@@ -48,3 +48,53 @@ def test_missing_model_dir(tmp_path):
     t = Transcriber(tmp_path)
     with pytest.raises(RuntimeError, match="модель не найдена"):
         t._model("small")
+
+
+class FakeWhisper:
+    def __init__(self, detected="az"):
+        self.detected = detected
+        self.calls = []
+
+    def transcribe(self, path, language, model_size, on_progress=None):
+        self.calls.append(("transcribe", language))
+        return [], "az"
+
+    def detect_language(self, path, model_size=None):
+        self.calls.append(("detect", model_size))
+        return self.detected
+
+
+class FakeVosk:
+    def __init__(self):
+        self.calls = []
+
+    def transcribe(self, path, language, on_progress=None):
+        self.calls.append(("vosk", language))
+        return [Segment(start=0.0, end=1.0, text="салом")], language
+
+
+def test_hybrid_routes_uz_to_vosk(tmp_path):
+    from app.asr import HybridTranscriber
+    w, v = FakeWhisper(), FakeVosk()
+    h = HybridTranscriber(tmp_path, whisper=w, vosk=v)
+    segs, det = h.transcribe("x.wav", "uz", "large-v3")
+    assert det == "uz" and v.calls == [("vosk", "uz")] and w.calls == []
+    assert segs[0].text == "салом"
+
+
+def test_hybrid_routes_az_to_whisper(tmp_path):
+    from app.asr import HybridTranscriber
+    w, v = FakeWhisper(), FakeVosk()
+    h = HybridTranscriber(tmp_path, whisper=w, vosk=v)
+    h.transcribe("x.wav", "az", "large-v3")
+    assert w.calls == [("transcribe", "az")] and v.calls == []
+
+
+def test_hybrid_auto_detects_then_routes(tmp_path):
+    from app.asr import HybridTranscriber
+    w, v = FakeWhisper(detected="tg"), FakeVosk()
+    h = HybridTranscriber(tmp_path, whisper=w, vosk=v)
+    segs, det = h.transcribe("x.wav", "auto", "large-v3")
+    assert w.calls == [("detect", "large-v3")]
+    assert v.calls == [("vosk", "tg")] and det == "tg"
+    assert segs[0].start == 0.0

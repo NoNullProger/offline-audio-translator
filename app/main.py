@@ -7,7 +7,7 @@ from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from .asr import Transcriber
+from .asr import HybridTranscriber
 from .config import models_dir, output_dir, web_dir, work_dir
 from .jobs import JobManager
 from .translate import NllbTranslator
@@ -17,7 +17,7 @@ RESULT_FILES = {"transcript.txt", "translation.txt", "result.docx"}
 
 
 def build_manager() -> JobManager:
-    transcriber = Transcriber(models_dir())
+    transcriber = HybridTranscriber(models_dir())
     translator = NllbTranslator(models_dir() / "nllb-600m-ct2")
     return JobManager(work_dir(), output_dir(), transcriber.transcribe, translator.translate_texts)
 
