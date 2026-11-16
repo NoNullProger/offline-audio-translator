@@ -22,11 +22,14 @@ def fetch(cfg: str, n: int, out_root: Path) -> None:
         print(f"[skip] {cfg}: уже {len(existing)} клипов")
         return
     api = HfApi()
-    files = [f for f in api.list_repo_files(REPO, repo_type="dataset")
-             if f.startswith(f"data/{cfg}/") and "test" in f and f.endswith(".parquet")]
+    all_files = api.list_repo_files(REPO, repo_type="dataset")
+    # актуальная раскладка: parquet-data/<cfg>/test-*.parquet
+    # (в старой раскладке было data/<cfg>/.../test-*.parquet)
+    files = [f for f in all_files
+             if cfg in f and "test" in f.split("/")[-1] and f.endswith(".parquet")]
     if not files:
-        all_cfg = [f for f in api.list_repo_files(REPO, repo_type="dataset") if cfg in f][:20]
-        raise SystemExit(f"не найдены test-шарды для {cfg}; файлы: {all_cfg}")
+        sample = [f for f in all_files if cfg in f][:20]
+        raise SystemExit(f"не найдены test-шарды для {cfg}; файлы: {sample}")
     saved = len(existing)
     for shard in sorted(files):
         local = hf_hub_download(REPO, shard, repo_type="dataset")
