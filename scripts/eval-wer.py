@@ -58,7 +58,8 @@ if __name__ == "__main__":
         refs = sorted(d.glob("*.ref.txt"))
         scores, seconds = [], 0.0
         for ref_file in refs:
-            audio = next(p for p in d.glob(f"{ref_file.stem}.*")
+            base = ref_file.name[:-len(".ref.txt")]   # 000.ref.txt -> 000
+            audio = next(p for p in d.glob(f"{base}.*")
                          if not p.name.endswith(".ref.txt"))
             ref = ref_file.read_text(encoding="utf-8")
             t0 = time.time()
