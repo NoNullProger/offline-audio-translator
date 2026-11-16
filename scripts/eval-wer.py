@@ -6,10 +6,13 @@
 
 import argparse
 import resource
+import sys
 import time
 from pathlib import Path
 
-from app.asr import Transcriber
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from app.asr import Transcriber  # noqa: E402
 
 
 def lang_of(cfg: str) -> str:
