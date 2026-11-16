@@ -48,7 +48,7 @@ if __name__ == "__main__":
     ap.add_argument("--model", default="turbo", choices=["turbo", "medium", "small"])
     ap.add_argument("--models-root", default="models-dev")
     ap.add_argument("--data", default="data/fleurs")
-    ap.add_argument("--langs", nargs="*", default=["uz_uz", "az_az", "tg_tg"])
+    ap.add_argument("--langs", nargs="*", default=["uz_uz", "az_az", "tg_tj"])
     args = ap.parse_args()
     t = Transcriber(args.models_root)
     lines = [f"## Модель {args.model}", "",

@@ -54,6 +54,12 @@ def fetch_whisper(venv_bin: Path) -> None:
             print(f"[fetch] {TURBO_HF}")
             snapshot_download(repo_id=TURBO_HF, local_dir=hf_cache)
         _convert(hf_cache, TURBO_OUT, venv_bin)
+        # faster-whisper берёт число mel-фильтров (128 у large-v3+) из первого
+        # файла и токенизатор из второго — без них не работает офлайн
+        shutil.copy(hf_cache / "preprocessor_config.json",
+                    TURBO_OUT / "preprocessor_config.json")
+        shutil.copy(hf_cache / "tokenizer.json",
+                    TURBO_OUT / "tokenizer.json")
 
 
 def fetch_and_convert_nllb(venv_bin: Path) -> None:
