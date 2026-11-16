@@ -62,5 +62,5 @@ if __name__ == "__main__":
     ap.add_argument("--n", type=int, default=15)
     ap.add_argument("--out", default="data/fleurs")
     args = ap.parse_args()
-    for cfg in ("uz_uz", "az_az", "tg_tg"):
+    for cfg in ("uz_uz", "az_az", "tg_tj"):
         fetch(cfg, args.n, Path(args.out))
