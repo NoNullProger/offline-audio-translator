@@ -45,7 +45,7 @@ if __name__ == "__main__":
     assert wer("салом алейкум", "салом алейкум") == 0.0
     assert wer("салом алейкум", "салом") == 0.5
     ap = argparse.ArgumentParser()
-    ap.add_argument("--model", default="turbo", choices=["turbo", "medium", "small"])
+    ap.add_argument("--model", default="large-v3", choices=["large-v3", "medium", "small"])
     ap.add_argument("--models-root", default="models-dev")
     ap.add_argument("--data", default="data/fleurs")
     ap.add_argument("--langs", nargs="*", default=["uz_uz", "az_az", "tg_tj"])
