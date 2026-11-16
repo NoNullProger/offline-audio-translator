@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+*.pyc
+models-dev/
+data/
+translator-bundle*/
+.pytest_cache/
