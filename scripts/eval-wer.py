@@ -71,7 +71,7 @@ if __name__ == "__main__":
         print(f"{cfg}: WER={mean:.2%} (n={len(scores)}), {seconds:.1f} c")
         lines.append(f"| {cfg} | {len(scores)} | {mean:.2%} | {seconds:.1f} |")
     rss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
-    lines += ["", f"max RSS: {rss / 1e6:.2f} ГБ"]
+    lines += ["", f"max RSS: {rss / 1e6:.0f} МБ"]
     Path("docs").mkdir(exist_ok=True)
     with open("docs/benchmark.md", "a", encoding="utf-8") as f:
         f.write("\n".join(lines) + "\n")
